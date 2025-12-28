@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import NoteForm from './components/NoteForm';
 import NoteList from './components/NoteList';
 
 const App = () => {
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState(() => {
+    const savedNotes = localStorage.getItem('savedNotes');
+    return savedNotes ? JSON.parse(savedNotes) : [];
+  });
   const deleteNote = (id) => {
     setNotes(notes.filter((note) => note.id !== id));
   };
+
+  useEffect(() => {
+    localStorage.setItem('savedNotes', JSON.stringify(notes));
+  }, [notes]);
   return (
     <div className="mt-10 min-h-screen p-4 text-black flex flex-col gap-y-8 items-center justify-center">
       <h1 className="text-2xl font-extralight italic">📝 Note App</h1>
